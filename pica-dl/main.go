@@ -31,10 +31,7 @@ func main() {
 	picago.DebugDir = *flagDebugDir
 	userid := flag.Arg(0)
 
-	client, err := picago.NewClient(*flagID, *flagSecret, *flagCode, *flagTokenCache)
-	if err != nil {
-		log.Fatalf("error with authorization: %v", err)
-	}
+	client := picago.NewClient(*flagID, *flagSecret, *flagCode, false, *flagTokenCache)
 	user, err := picago.GetUser(client, "")
 	log.Printf("user=%#v err=%v", user, err)
 
