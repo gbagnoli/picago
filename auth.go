@@ -10,7 +10,8 @@ import (
 	"net"
 	"net/http"
 
-	"camlistore.org/third_party/code.google.com/p/goauth2/oauth"
+	"camlistore.org/pkg/oauthutil"
+	"golang.org/x/oauth2"
 )
 
 const picasaScope = "https://picasaweb.google.com/data/"
@@ -27,13 +28,14 @@ func Authorize(ID, secret string) error {
 // NewClient returns an authorized http.Client usable for requests,
 // caching tokens in the given file.
 func NewClient(id, secret, code, tokenCacheFilename string) (*http.Client, error) {
-	return NewClientCache(id, secret, code, oauth.CacheFile(tokenCacheFilename))
+
+	return NewClientCache(id, secret, code, oauthutil.NewRefreshTokenSource(nil, ""))
 }
 
 // For redirect_uri, see https://developers.google.com/accounts/docs/OAuth2InstalledApp#choosingredirecturi .
 //
-// NewClientCache returns an authorized http.Client with the given oauth.Cache implementation
-func NewClientCache(id, secret, code string, cache oauth.Cache) (*http.Client, error) {
+// NewClientCache returns an authorized http.Client with the given oauth2.Cache implementation
+func NewClientCache(id, secret, code string, cache oauth2.Cache) (*http.Client, error) {
 	transport, err := NewTransport(id, secret, cache)
 	if err != nil {
 		return nil, err
@@ -81,11 +83,11 @@ func NewClientCache(id, secret, code string, cache oauth.Cache) (*http.Client, e
 	return &http.Client{Transport: transport}, nil
 }
 
-func NewTransport(id, secret string, cache oauth.Cache) (*oauth.Transport, error) {
+func NewTransport(id, secret string, cache oauth2.Cache) (*oauth2.Transport, error) {
 	if id == "" || secret == "" {
 		return nil, errors.New("Client ID and secret is needed!")
 	}
-	config := &oauth.Config{
+	config := &oauth2.Config{
 		ClientId:     id,
 		ClientSecret: secret,
 		AuthURL:      "https://accounts.google.com/o/oauth2/auth",
@@ -93,12 +95,12 @@ func NewTransport(id, secret string, cache oauth.Cache) (*oauth.Transport, error
 		Scope:        picasaScope,
 		TokenCache:   cache,
 	}
-	return &oauth.Transport{Config: config}, nil
+	return &oauth2.Transport{Config: config}, nil
 }
 
 // NewAuthorizeHandler returns a http.HandlerFunc which will set the Token of
-// the given oauth.Transport and send a struct{} on the donech on success.
-func NewAuthorizeHandler(transport *oauth.Transport, donech chan<- struct{}) http.HandlerFunc {
+// the given oauth2.Transport and send a struct{} on the donech on success.
+func NewAuthorizeHandler(transport *oauth2.Transport, donech chan<- struct{}) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		token, err := transport.Exchange(r.FormValue("code"))
 		if err != nil {
