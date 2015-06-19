@@ -72,8 +72,7 @@ func NewClient(id, secret, code string, online bool, tokenCacheFile string) *htt
 			// Get an authorization code from the data provider.
 			// ("Please ask the user if I can access this resource.")
 			url := config.AuthCodeURL("picago", acOpt)
-			fmt.Println("Visit this URL to get a code, then run again with code=YOUR_CODE\n")
-			fmt.Println(url)
+			fmt.Printf("Visit this URL to get a code, then run again with code=YOUR_CODE:\n" + url + "\n\n")
 
 			srv := &http.Server{Handler: NewAuthorizeHandler(ctx, config, donech)}
 			go srv.Serve(l)
