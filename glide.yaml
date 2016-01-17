@@ -1,6 +1,8 @@
 package: github.com/gbagnoli/picago
 import:
 - package: github.com/odeke-em/goauth2
+  vcs: git
+  repo: https://github.com/odeke-em/goauth2.git
   subpackages:
   - /oauth
 - package: github.com/tgulacsi/picago

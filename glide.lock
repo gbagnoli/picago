@@ -1,5 +1,5 @@
-hash: ef7a35163956ed643a53e39862cee01187753771bbd1977f4029f779e2afc146
-updated: 2016-01-17T10:50:39.752994401Z
+hash: 8da6f4d0ccf11c3a8ba690cede19bf94f8713f4839ae8c57d94a29b3bac81723
+updated: 2016-01-17T10:56:11.192619445Z
 imports:
 - name: code.google.com/p/goauth2
   version: cb9484d494416c5f78dfe6ea9a847d54ef1f07b0
@@ -9,10 +9,12 @@ imports:
   - /oauth
 - name: github.com/odeke-em/goauth2
   version: cb9484d494416c5f78dfe6ea9a847d54ef1f07b0
+  repo: https://github.com/odeke-em/goauth2.git
+  vcs: git
   subpackages:
   - /oauth
 - name: github.com/tgulacsi/picago
-  version: 5bf38a834c6882e2089f1e093b99d21adeec14b0
+  version: 9fe5548525d7a6f6bcbf9f3a508bd71f73dd2bca
   repo: git@github.com:gbagnoli/picago.git
   vcs: git
 devImports: []
